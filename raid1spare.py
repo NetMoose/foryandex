@@ -76,26 +76,24 @@ for match in result :
 for md in namemd:
   for sd in namemd[md].keys():
     if namemd[md][sd]['state'] == '_':
-      print "/sbin/mdadm /dev/%s -f /dev/%s"%(md,namemd[md][sd]['name'])
       try:
-        fail = get_cmd_output("/sbin/mdadm /dev/%s -f /dev/%s"%(md,namemd[md][sd]['name']))
+        fail = get_cmd_output("/sbin/mdadm /dev/%s -f /dev/%s" % (md,namemd[md][sd]['name']))
       except:
-        print "ЖОПА!!!!"
+        send_eml(fail)
       finally:
         exit(0)
-      print "/sbin/mdadm /dev/%s -r /dev/%s"%(md,namemd[md][sd]['name'])
       try:
-        remv = get_cmd_output("/sbin/mdadm /dev/%s -r /dev/%s"%(md,namemd[md][sd]['name']))
+        remv = get_cmd_output("/sbin/mdadm /dev/%s -r /dev/%s" % (md,namemd[md][sd]['name']))
       except:
-        print "ЖОПА!!!!"
+        send_eml(remv)
       finally:
         exit(0)
-      print "/sbin/mdadm /dev/%s -a /dev/%s"%(md,spare)
       try:
-        newadd = get_cmd_output("/sbin/mdadm /dev/%s -a /dev/%s"%(md,spare))
+        newadd = get_cmd_output("/sbin/mdadm /dev/%s -a /dev/%s" % (md,spare))
       except:
-        print "ЖОПА!!!!"
+        send_eml(newadd)
       finally:
         exit(0)
     else:
-      print "Хорошо"
+      send_eml("В массиве %s диск /dev/%s заменен на /dev/%s" % (md,namemd[md][sd]['name'],spare))
+      exit(0)
